@@ -30,9 +30,25 @@ bool checkPermutation(string str1, string str2)
     //we sort the strings
     sort(str1.begin(), str1.end());
     sort(str2.begin(), str2.end());
-    cout << "First  string: " << str1 << endl;
-    cout << "Second string: " << str2 << endl;
     return str1 == str2;
+}
+
+bool checkPermutation2(string str1, string str2)
+{
+    if(str1.length() != str2.length()) return false;
+
+    int letters[128] = {0};
+
+    for(int i= 0 ; i < str1.length(); i++)
+    {
+        letters[str1.at(i)]++;
+    }
+    for(int i= 0 ; i < str2.length(); i++)
+    {
+        letters[str2.at(i)]--;
+        if(letters[str2.at(i)] < 0) return false;
+    }
+    return true;
 }
 
 void  testIsUniques()
@@ -53,7 +69,7 @@ void  testPermutation()
     cin >> str1;
     cout << "Put in the second string:";
     cin >> str2;
-    bool result = checkPermutation(str1, str2);
+    bool result = checkPermutation2(str1, str2);
     cout << "for string " << str1 << " and string " << str2 << " result is " << result << endl;
 }
 
