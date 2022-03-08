@@ -88,6 +88,40 @@ string urlify(string str, int trueLength)
     return str;
 }
 
+bool isPalindromePermutation(string str)
+{
+    int letters['z'-'a' + 1] = {0};
+    int countOdd = 0;
+    for(int i=0;i<str.length(); i++)
+    {
+        int currenctChar = str.at(i);
+        if(currenctChar >= 'a' && currenctChar <= 'z')
+        {
+            letters[currenctChar-'a']++;
+            if(letters[currenctChar-'a']%2==1)
+            {
+                countOdd++;
+            } else {
+                countOdd--;
+            }
+        }
+        else if(currenctChar >= 'A' && currenctChar <'Z')
+        {
+
+            letters[currenctChar-'A']++;
+            if(letters[currenctChar-'A']%2==1)
+            {
+                countOdd++;
+            } else {
+                countOdd--;
+            }
+        }
+    }
+    cout << letters << endl;
+    cout<<"Odd count: " << countOdd;
+    return countOdd <= 1;
+}
+
 void  testIsUniques()
 {
     cout << "Check if a string has unique characters." << endl;
@@ -115,9 +149,15 @@ void testUrlify()
     cout << urlify("asal nesar nobari     ", 17) << endl;
 }
 
+void testPalindromePermutation()
+{
+    bool result = isPalindromePermutation("Tact -+)/Coa");
+    cout << "Is string Palindrome permutation: " << result << endl;
+}
+
 int main()
 {
-    testUrlify();
+    testPalindromePermutation();
     return 0;
 }
 
