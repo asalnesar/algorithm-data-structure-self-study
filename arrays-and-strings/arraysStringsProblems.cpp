@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <bits/stdc++.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -122,6 +123,35 @@ bool isPalindromePermutation(string str)
     return countOdd <= 1;
 }
 
+bool oneEditAway(string first, string second)
+{
+    if(abs(int(first.length() - second.length())) > 1)
+        return false;
+    int index1=0;
+    int index2=0;
+    bool foundDifference = false;
+
+    string str1 = first.length() > second.length() ? first : second;
+    string str2 = first.length() > second.length() ? second : first;
+    cout<<str1 <<" <---str1" <<endl;
+    cout<<str2 <<" <---str2" <<endl;
+    while(index1<str1.length() && index2<str2.length()){
+        if(str1.at(index1) != str2.at(index2)){
+            if(foundDifference){
+                return false;
+            }
+            foundDifference = true;
+            if(str1.length() == str2.length()){
+                index2++;
+            }
+        } else {
+            index2++;
+        }
+        index1++;
+    }
+    return true;
+}
+
 void  testIsUniques()
 {
     cout << "Check if a string has unique characters." << endl;
@@ -155,9 +185,22 @@ void testPalindromePermutation()
     cout << "Is string Palindrome permutation: " << result << endl;
 }
 
+void testOneEditAway()
+{
+    cout << "One edit away:"<<endl;
+    cout<<"Put in first string:"<<endl;
+    string first;
+    cin>>first;
+    cout<<"Put in second string:"<<endl;
+    string second;
+    cin>>second;
+    bool result = oneEditAway(first,second);
+    cout <<"Words "<<first<<" and " << second<< " are one edit away? result: " <<result<<endl;
+}
+
 int main()
 {
-    testPalindromePermutation();
+    testOneEditAway();
     return 0;
 }
 
