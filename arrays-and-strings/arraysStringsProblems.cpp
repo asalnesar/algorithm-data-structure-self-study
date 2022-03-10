@@ -152,6 +152,22 @@ bool oneEditAway(string first, string second)
     return true;
 }
 
+string compress(string str)
+{
+    stringstream compressedStream;
+    int consecutiveCount = 0;
+    for(int i =0 ; i< str.length(); i++){
+        consecutiveCount++;
+        if(i+1>=str.length() || str.at(i)!=str.at(i+1)){
+            compressedStream << str.at(i) << consecutiveCount;
+            consecutiveCount=0;
+        }
+    }
+    string compressed = compressedStream.str();
+    return compressed.length() > str.length() ? str : compressed;
+    
+}
+
 void  testIsUniques()
 {
     cout << "Check if a string has unique characters." << endl;
@@ -198,9 +214,19 @@ void testOneEditAway()
     cout <<"Words "<<first<<" and " << second<< " are one edit away? result: " <<result<<endl;
 }
 
+void testCompress(){
+    cout <<"Test compressing:"<<endl;
+    cout<<"Put in string:"<<endl;
+    string str;
+    cin>>str;
+    string result = compress(str);
+    cout<<"String " <<str<< " was compressed: " << result <<endl;
+}
+
+
 int main()
 {
-    testOneEditAway();
+    testCompress();
     return 0;
 }
 
