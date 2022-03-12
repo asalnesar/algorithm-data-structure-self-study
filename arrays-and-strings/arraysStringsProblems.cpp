@@ -2,6 +2,7 @@
 #include <string>
 #include <bits/stdc++.h>
 #include <stdlib.h>
+#include <vector>
 
 using namespace std;
 
@@ -165,6 +166,12 @@ string compress(string str)
     }
     string compressed = compressedStream.str();
     return compressed.length() > str.length() ? str : compressed;
+    
+}
+
+bool rotateMatrix(vector<vector<int>> matrix)
+{
+    if(matrix.size() ==  0 || matrix.size() != matrix[0].size()) return false;
     
 }
 
