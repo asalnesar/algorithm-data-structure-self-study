@@ -28,6 +28,23 @@ class Node {
             }
             cout<<n->data<<endl;
         }
+        Node deleteNode(int d)
+        {
+            Node *head = this;
+            Node *n = this;
+            if(n->data==d)  return *n->next;
+            while(n->next != NULL)
+            {
+                if(n->next->data == d)
+                {
+                    n->next=n->next->next;
+                    return *head;
+                }
+                n=n->next;
+            }
+            return *head;
+
+        }
 
 };
 
@@ -37,6 +54,8 @@ int main(){
     head.appendToTail(3);
     head.appendToTail(4);
     head.appendToTail(5);
+    head.printLinkedList();
+    head=head.deleteNode(1);
     head.printLinkedList();
 
 }

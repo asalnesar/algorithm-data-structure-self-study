@@ -169,10 +169,25 @@ string compress(string str)
     
 }
 
-bool rotateMatrix(vector<vector<int>> matrix)
+vector<vector<int>> rotateMatrix(vector<vector<int>> matrix)
 {
     if(matrix.size() ==  0 || matrix.size() != matrix[0].size()) return false;
-    
+    int n = matrix.size();
+
+    for(int layer = 0; layer < n/2 ; i++){
+        int first = layer;
+        int last = n-1-layer;
+        for(int i=first; i < last; i++){
+            int offset = i-first;
+            int top = matrix[first][i];
+            matrix[first][i]=matrix[last-offset][first];
+            matrix[last-offset][first]=matrix[last][last-offset];
+            matrix[last][last-offset] = matrix[i][last];
+            matrix[i][last]=top;
+
+        }
+    }
+    return matrix;
 }
 
 void  testIsUniques()
@@ -228,6 +243,15 @@ void testCompress(){
     cin>>str;
     string result = compress(str);
     cout<<"String " <<str<< " was compressed: " << result <<endl;
+}
+
+void testRotation(){
+    vector<vector<int>> matrix {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
 }
 
 
