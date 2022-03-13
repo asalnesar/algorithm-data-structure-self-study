@@ -79,8 +79,25 @@ void removeDupsWithoutBuffer(Node *head){
     }
 }
 
+Node* nthToLast(Node *head, int k, int &i){
+    if(head== NULL){
+        return NULL;
+    }
+    Node *nd=nthToLast(head->next, k, i);
+    i++;
+    if(i==k){
+        return head;
+    }
+    return nd;
+}
 
-int main(){
+Node* nthToLast(Node *head, int k){
+    int i=0;
+    return nthToLast(head, k , i);
+}
+
+
+void testRemoveDups(){
     Node *head= new Node(1);
     head->appendToTail(2);
     head->appendToTail(3);
@@ -91,5 +108,22 @@ int main(){
     head->printLinkedList();
     removeDupsWithoutBuffer(head);
     head->printLinkedList();
+}
+
+void testKthElement(){
+    Node *head= new Node(1);
+    head->appendToTail(2);
+    head->appendToTail(3);
+    head->appendToTail(4);
+    head->appendToTail(2);
+    head->appendToTail(3);
+    head->appendToTail(5);
+    head->printLinkedList();
+    Node *newLinkedList= nthToLast(head, 2);
+    newLinkedList->printLinkedList();
+}
+
+int main(){
+    testKthElement();
     return 0;
 }
