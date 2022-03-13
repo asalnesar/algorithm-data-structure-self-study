@@ -96,6 +96,61 @@ Node* nthToLast(Node *head, int k){
     return nthToLast(head, k , i);
 }
 
+bool  deleteMiddleNode(Node *middle){
+    if(middle==NULL || middle->next == NULL) return false;
+    Node *next = middle->next;
+    middle->data = next->data;
+    middle->next=next->next;
+    return true;
+}
+
+Node* partition(Node *n, int x){
+    Node *head = n;
+    Node *tail = n;
+    while(n != NULL){
+        Node *next = n->next;
+        if(n->data < x){
+            n->next = head;
+            head=n;
+        } else {
+            tail->next = n;
+            tail = n;
+        }
+        n = next;
+    }
+    tail->next = NULL;
+    return head;
+}
+
+Node* sumList(Node *n, Node *m){
+    Node *result = NULL;
+    int carry = 0;
+
+    while(n!= NULL || m!=NULL){
+        int nData = n!= NULL ? n->data : 0;
+        int mData = m!= NULL ? m->data : 0;
+        int sum = nData + mData + carry;
+        cout <<"sum: "<<sum<<endl;
+        if(result==NULL){
+            result = new Node(sum%10);
+        } else {
+            result->appendToTail(sum%10);
+        }
+        carry = (sum - (sum%10))/10;
+        cout << "carry: "<<carry<<endl;
+        if(n!= NULL){
+            n = n->next;
+        }
+        if(m!=NULL){
+            m=m->next;
+        }
+    }
+    if(carry!=0){
+        result->appendToTail(carry);
+    }
+    return result;
+}
+
 
 void testRemoveDups(){
     Node *head= new Node(1);
@@ -123,7 +178,55 @@ void testKthElement(){
     newLinkedList->printLinkedList();
 }
 
+void testDeleteMiddle(){
+    Node *head= new Node(1);
+    head->appendToTail(2);
+    head->appendToTail(3);
+    head->appendToTail(4);
+    head->appendToTail(5);
+    head->appendToTail(6);
+    head->appendToTail(7);
+    head->printLinkedList();
+    Node *middle= nthToLast(head, 3);
+    middle->printLinkedList();
+    bool result = deleteMiddleNode(middle);
+    if(result){
+        cout <<"Middle node removed."<<endl;
+    } else {
+        cout <<"Middle node cannot be removed."<<endl;
+        
+    }
+    cout<<"New linked list:"<<endl;
+    head->printLinkedList();
+}
+
+void testPartition(){
+    Node *head= new Node(1);
+    head->appendToTail(6);
+    head->appendToTail(3);
+    head->appendToTail(7);
+    head->appendToTail(8);
+    head->appendToTail(2);
+    head->appendToTail(4);
+    head->printLinkedList();
+    head = partition(head, 4);
+    head->printLinkedList();
+}
+
+void testSumList(){
+    Node *n = new Node(9);
+    n->appendToTail(7);
+    n->appendToTail(8);
+    n->printLinkedList();
+    Node *m = new Node(6);
+    m->appendToTail(8);
+    m->appendToTail(5);
+    m->printLinkedList();
+    Node *result = sumList(n,m);
+    result->printLinkedList();
+}
+
 int main(){
-    testKthElement();
+    testSumList();
     return 0;
 }
