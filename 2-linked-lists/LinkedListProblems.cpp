@@ -3,6 +3,7 @@
 #include <bits/stdc++.h>
 #include <stdlib.h>
 #include <unordered_set>
+#include <stack>
 
 using namespace std;
 
@@ -208,6 +209,30 @@ Node* sumListForward(Node *n, Node*m){
     return result;
 }
 
+bool isPalindrome(Node *l){
+    stack<int> stack;
+    Node *slow = l;
+    Node *fast = l;
+    while(fast!=NULL && fast->next!=NULL){
+        stack.push(slow->data);
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    //odd elements
+    if(fast!=NULL){
+        slow=slow->next;//skip the middle element
+    }
+    while(slow!=NULL){
+        int top = stack.top();
+        stack.pop();
+        if(top!= slow->data){
+            return false;
+        }
+        slow=slow->next;
+    }
+    return true;
+}
+
 Node* passFirstNodes(Node *n, int count)
 {
     Node *tail = n;
@@ -352,7 +377,19 @@ void testIntersect(){
     result->printLinkedList();
 
 }
+void testPalindrome(){
+    Node *l1= new Node(1);
+    l1->appendToTail(2);
+    l1->appendToTail(3);
+    l1->appendToTail(3);
+    l1->appendToTail(2);
+    l1->appendToTail(1);
+    l1->appendToTail(4);
+    l1->printLinkedList();
+    bool result = isPalindrome(l1);
+    cout<<"Palindrome result: " <<result<<endl;
+}
 int main(){
-    testIntersect();
+    testPalindrome();
     return 0;
 }
