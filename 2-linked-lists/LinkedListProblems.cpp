@@ -22,6 +22,14 @@ class Node {
             }
             n->next=end;
         }
+        void appendToTail(Node *nd){
+            Node *end=  nd;
+            Node *n = this;
+            while(n->next != NULL){
+                n=n->next;
+            }
+            n->next=end;
+        }
         void printLinkedList(){
             Node *n = this;
             while(n->next != NULL){
@@ -200,6 +208,43 @@ Node* sumListForward(Node *n, Node*m){
     return result;
 }
 
+Node* passFirstNodes(Node *n, int count)
+{
+    Node *tail = n;
+    for(int i = 0 ; i<count; i++){
+        if(n->next != NULL){
+            tail = n->next;
+        }
+        else{
+            //count is  bigger than linked list's size
+            return NULL;
+        }
+    }
+    return tail;
+}
+Node* doIntersect(Node  *l1, Node *l2){
+    int length1 = length(l1);
+    int length2 = length(l2);
+    int shorterLength = length1; //for now
+
+    if(length1>length2){
+        l1=passFirstNodes(l1, length1-length2);
+        shorterLength = length2;
+    }
+    else if(length2>length1){
+        l2=passFirstNodes(l2,length2-length1);
+    }
+    //l1 and l2 have the same length here
+    while(l1 != NULL && l2 != NULL){
+        if(l1 == l2){
+            return l1;
+        }
+        l1 = l1->next;
+        l2 = l2->next; 
+    }
+    return NULL;
+}
+
 
 void testRemoveDups(){
     Node *head= new Node(1);
@@ -286,7 +331,28 @@ void testSumListForward(){
     Node *result = sumListForward(n,m);
     result->printLinkedList();
 }
+
+void testIntersect(){
+    Node *l1= new Node(1);
+    l1->appendToTail(2);
+    l1->appendToTail(3);
+    l1->appendToTail(4);
+    l1->appendToTail(5);
+    l1->appendToTail(6);
+    l1->appendToTail(7);
+    l1->printLinkedList();
+    Node *middle= nthToLast(l1, 3);
+    Node *l2 = new Node(2);
+    l2->appendToTail(8);
+    l2->appendToTail(9);
+    l2->appendToTail(middle);
+    l2->printLinkedList();
+
+    Node *result  = doIntersect(l1,l2);
+    result->printLinkedList();
+
+}
 int main(){
-    testSumListForward();
+    testIntersect();
     return 0;
 }
