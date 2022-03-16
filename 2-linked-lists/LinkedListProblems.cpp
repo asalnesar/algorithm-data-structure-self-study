@@ -270,6 +270,25 @@ Node* doIntersect(Node  *l1, Node *l2){
     return NULL;
 }
 
+Node* hasLoop(Node *l){
+    Node *slow = l;
+    Node *fast = l;
+    while(fast!=NULL && fast->next != NULL){
+        slow=slow->next;
+        fast=fast->next->next;
+        if(slow == fast){
+            break;
+        }   
+    }
+    if(fast==NULL || fast->next == NULL)    return NULL;
+    slow = l;
+    while(slow!=fast){
+        slow=slow->next;
+        fast=fast->next;
+    }
+    return slow;
+}
+
 
 void testRemoveDups(){
     Node *head= new Node(1);
@@ -389,7 +408,20 @@ void testPalindrome(){
     bool result = isPalindrome(l1);
     cout<<"Palindrome result: " <<result<<endl;
 }
+
+void testLoop(){
+    Node *l1= new Node(1);
+    l1->appendToTail(2);
+    l1->appendToTail(3);
+    l1->appendToTail(4);
+    l1->appendToTail(5);
+    l1->appendToTail(6);
+    Node *loopStart = nthToLast(l1, 3);
+    l1->appendToTail(loopStart);
+    Node* result = hasLoop(l1);
+    cout<<"Loop start: "<<result->data<<endl;
+}
 int main(){
-    testPalindrome();
+    testLoop();
     return 0;
 }
