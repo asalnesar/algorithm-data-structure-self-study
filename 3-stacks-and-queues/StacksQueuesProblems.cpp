@@ -52,6 +52,52 @@ class myStack{
 
 };
 
+class multistack{
+    private:
+        int values[90];
+        int sizes[3]={0};
+        const int stackCapacity = 30;
+    public:
+        void push(int stackIndex, int value){
+            if(sizes[stackIndex]>=stackCapacity){
+                cout <<"Stack overflow"<<endl;
+                return;
+            }
+            int position = (stackIndex * stackCapacity) + sizes[stackIndex];
+            values[position] = value;
+            sizes[stackIndex]++;
+        }
+        void pop(int stackIndex){
+            if(sizes[stackIndex] <= 0){
+                cout <<"Stack underflow"<<endl;
+                return;
+            }
+            sizes[stackIndex]--;
+        }
+        int peak(int stackIndex){
+            if(sizes[stackIndex]<=0 || sizes[stackIndex]>=stackCapacity){
+                cout<<"Stack underflow/overflow problem"<<endl;
+                return NAN;
+            }
+            int position = (stackIndex * stackCapacity) + sizes[stackIndex];
+            return values[position];
+        }
+        void printStack(int stackIndex){
+            int  start = stackIndex * stackCapacity;
+            int end = start + sizes[stackIndex];
+            for(int i = start; i< end; i++){
+                if(i!= end-1){
+                    cout<<values[i]<<"->";
+                } else {
+                    cout<<values[i]<<endl;
+                }
+                
+            }
+        }
+
+
+};
+
 void  testStack(){
     myStack *s = new myStack();
     int top = s->peak();
@@ -69,7 +115,25 @@ void  testStack(){
     cout<<"Peak: "<<top<<endl;
 }
 
+void testMultiStack(){
+    multistack *s = new multistack();
+    s->push(0,1);
+    s->push(0,2);
+    s->push(0,3);
+    s->push(1,4);
+    s->push(1,5);
+    s->push(1,6);
+    s->push(2,7);
+    s->push(2,8);
+    s->printStack(0);
+    s->printStack(1);
+    s->printStack(2);
+    s->pop(1);
+    s->printStack(1);
+
+}
+
 int main(){
-    testStack();
+    testMultiStack();
     return 0;
 }
