@@ -3,11 +3,13 @@
 #include <bits/stdc++.h>
 #include <stdlib.h>
 #include <unordered_set>
+#include <vector>
 
 using namespace std;
 struct StackNode{
     int data;
     StackNode *next;
+    int minOfSubstack;
 };
 class myStack{      
     private:
@@ -20,6 +22,11 @@ class myStack{
             StackNode *newNode = new StackNode();
             newNode->data = d;
             newNode->next = top;
+            if(top == NULL){
+                newNode->minOfSubstack = d;
+            } else{
+                newNode->minOfSubstack = d < top->minOfSubstack  ? d : top->minOfSubstack;
+            }
             top = newNode;
         }
         void pop(){
@@ -40,7 +47,11 @@ class myStack{
             return top->data;
         }
 
-        void printLinkedList(){
+        int min(){
+            return top->minOfSubstack;
+        }
+
+        void printStack(){
             StackNode *s = top;
             while(s->next != NULL){
                 cout<< s->data << "->";
@@ -98,6 +109,101 @@ class multistack{
 
 };
 
+class setOfStacks{
+    private:
+        vector<myStack*> stacks;
+        int stackCapacity;
+        int capacityCounter;
+    public:
+        setOfStacks(){
+            stackCapacity = 3;
+            capacityCounter=0;
+        }
+        void push(int value){
+            if(stacks.size() == 0 || capacityCounter>= stackCapacity){
+                capacityCounter = 0;
+                myStack *s = new myStack();
+                s->push(value);
+                stacks.push_back(s);
+                capacityCounter++;
+            }
+            else {
+                stacks.at(stacks.size()-1)->push(value);
+                capacityCounter++;
+            }
+        }
+        void pop(){
+            if(stacks.size() == 0){
+                cout << "stack underflow"<<endl;
+                return;
+            }
+            stacks.at(stacks.size()-1)->pop();
+            capacityCounter--;
+            if(capacityCounter==0)//means the last stack is empty now
+            {
+                stacks.pop_back();
+                capacityCounter = stackCapacity;
+            }
+        }
+
+        void printStacks(){
+            for(int i =0; i<stacks.size();i++){
+                cout << "Stack #" <<i+1 <<": ";
+                stacks.at(i)->printStack();
+            }
+        }
+
+        int peak(){
+            if(stacks.size() == 0){
+                cout << "stack underflow"<<endl;
+                return NAN;
+            }
+            return stacks.at(stacks.size()-1)->peak();
+        }
+        void popAt(int index){
+            if(index >= stacks.size()){
+                cout << "stack underflow"<<endl;
+                return;
+            }
+            stacks.at(index)->pop();
+        }
+};
+
+class myQueue{
+    private:
+        myStack *in = new myStack();
+        myStack *out = new myStack();
+        int inSize =  0;
+        int outSize = 0;
+    public: 
+        void push(int value){
+            in->push(value);
+            inSize ++;
+        }
+        int pop(){
+            if(outSize == 0 && inSize ==0){
+                cout<<"Queue underflow"<<endl;
+                return -1;
+            }
+            else if(outSize == 0){
+                while(!in->isEmpty()){
+                    int d = in->peak();
+                    in->pop();
+                    inSize--;
+                    out->push(d);
+                    outSize++;
+                }
+                
+            }
+            int top =  out->peak();
+            out->pop();
+            outSize--;
+            return top;
+        }
+
+
+};
+
 void  testStack(){
     myStack *s = new myStack();
     int top = s->peak();
@@ -106,11 +212,11 @@ void  testStack(){
     s->push(2);
     s->push(3);
     s->push(4);
-    s->printLinkedList();
+    s->printStack();
     top = s->peak();
     cout<<"Peak: "<<top<<endl;
     s->pop();
-    s->printLinkedList();
+    s->printStack();
     top = s->peak();
     cout<<"Peak: "<<top<<endl;
 }
@@ -133,7 +239,63 @@ void testMultiStack(){
 
 }
 
+void testMin(){
+    myStack *s = new myStack();
+    s->push(3);
+    s->push(2);
+    s->push(4);
+    s->push(1);
+    s->printStack();
+    cout << "MIN: " << s->min() <<endl;
+    s->pop();
+    s->printStack();
+    cout << "MIN: " << s->min() <<endl;
+}
+
+void testSetOfStacks(){
+    setOfStacks *s = new setOfStacks();
+    s->push(1);
+    s->push(2);
+    s->push(3);
+    s->push(4);
+    s->push(5);
+    s->push(6);
+    s->push(7);
+    s->push(8);
+    s->push(9);
+    s->push(10);
+    s->printStacks();
+    s->pop();
+    s->pop();
+    s->printStacks();
+    s->push(10);
+    s->push(11);
+    s->push(12);
+    s->push(13);
+    cout<< "PEAK: " << s->peak()<<endl;
+    s->printStacks();
+    s->popAt(1);
+    s->printStacks();
+
+}
+
+void testQueue(){
+    myQueue *q = new myQueue();
+    q->push(1);
+    q->push(2);
+    q->push(3);
+    q->push(4);
+    cout <<"POP: " << q->pop() << endl;
+    q->push(5);
+    q->push(6);
+    cout <<"POP: " << q->pop() << endl;
+    cout <<"POP: " << q->pop() << endl;
+    cout <<"POP: " << q->pop() << endl;
+    cout <<"POP: " << q->pop() << endl;
+    cout <<"POP: " << q->pop() << endl;
+    cout <<"POP: " << q->pop() << endl;
+}
 int main(){
-    testMultiStack();
+    testQueue();
     return 0;
 }
