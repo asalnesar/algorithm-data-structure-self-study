@@ -4,12 +4,78 @@
 #include <stdlib.h>
 #include <unordered_set>
 #include <vector>
+#include <queue>
 
 using namespace std;
 struct StackNode{
     int data;
     StackNode *next;
     int minOfSubstack;
+};
+enum Animal{
+    Cat,
+    Dog
+};
+
+class shelterQueue{
+    private:
+        queue<int> catsQueue;
+        queue<int> dogsQueue;
+        int rank = 0;
+    public:
+        void enqueue(Animal a){
+            rank++;
+            if(a==Animal::Cat){
+                catsQueue.push(rank);
+            }
+            else{
+                dogsQueue.push(rank);
+            }
+        }
+        int dequeueDog(){
+            int poppedRank;
+            if(dogsQueue.empty()){
+                printf("There are no more dogs");
+                getchar();
+                exit(0);
+            }
+            poppedRank = dogsQueue.front();
+            dogsQueue.pop();
+        }
+        int dequeueCat(){
+            int poppedRank;
+            if(catsQueue.empty()){
+                printf("There are no more cats");
+                getchar();
+                exit(0);
+            }
+            poppedRank = catsQueue.front();
+            catsQueue.pop();
+        }
+        int dequeueAny(){
+            if(catsQueue.front() < dogsQueue.front()){//cat is older
+                return dequeueCat();
+            }
+            else{//dog is older
+                return dequeueDog();
+            }
+        }
+        void printQueues(){
+            cout << "CATS:"<<endl;
+            queue<int> cats = catsQueue;
+            while(!cats.empty()){
+                cout<< "Cat #" << cats.front()<< "->";
+                cats.pop();
+            }
+            cout << endl;
+            cout << "DOGS:"<<endl;
+            queue<int> dogs = dogsQueue;
+            while(!dogs.empty()){
+                cout<< "Dog #" <<dogs.front() << "->";
+                dogs.pop();
+            }
+            cout << endl;
+        }
 };
 class myStack{      
     private:
@@ -29,14 +95,16 @@ class myStack{
             }
             top = newNode;
         }
-        void pop(){
+        int pop(){
             if(isEmpty()){
                 cout << "Stack is empty"<<endl;
-                return;
+                return -1;
             }
             StackNode *popped = top;
+            int data = popped->data;
             top = top->next;
             delete(popped);
+            return data;
         }
 
         int peak(){
@@ -204,6 +272,37 @@ class myQueue{
 
 };
 
+class sortedStack{
+    private:
+        myStack *sorted = new myStack();
+        myStack *helper = new myStack();
+    public:
+        void push(int value){
+            if(sorted->isEmpty()){
+                sorted->push(value);
+                return;
+            }
+            while(!sorted->isEmpty() && sorted->peak() < value){
+                helper->push(sorted->pop());
+            }
+            sorted->push(value);
+            while(!helper->isEmpty()){
+                sorted->push(helper->pop());
+            }
+        }
+        int pop(){
+            if(sorted->isEmpty()){
+                cout <<"stack underflow"<<endl;
+                return -1;
+            }
+            return sorted->pop();
+        }
+        int print(){
+            sorted->printStack();
+        }
+
+};
+
 void  testStack(){
     myStack *s = new myStack();
     int top = s->peak();
@@ -295,7 +394,45 @@ void testQueue(){
     cout <<"POP: " << q->pop() << endl;
     cout <<"POP: " << q->pop() << endl;
 }
+
+void testSortedStack(){
+    sortedStack *s = new sortedStack();
+    s->push(6);
+    s->print();
+    s->push(3);
+    s->print();
+    s->push(9);
+    s->print();
+    s->push(7);
+    s->print();
+    s->push(1);
+    s->print();
+    s->push(2);
+    s->print();
+}
+
+void testAnimalShelter(){
+    Animal cat = Animal::Cat;
+    Animal dog = Animal::Dog;
+    shelterQueue *q = new shelterQueue();
+    q->enqueue(cat);
+    q->enqueue(dog);
+    q->enqueue(cat);
+    q->enqueue(cat);
+    q->enqueue(dog);
+    q->enqueue(dog);
+    q->enqueue(cat);
+    q->enqueue(dog);
+    q->enqueue(cat);
+    q->enqueue(dog);
+    q->printQueues();
+    q->dequeueAny();
+    q->printQueues();
+    q->dequeueCat();
+    q->dequeueAny();
+    q->printQueues();
+}
 int main(){
-    testQueue();
+    testAnimalShelter();
     return 0;
 }
