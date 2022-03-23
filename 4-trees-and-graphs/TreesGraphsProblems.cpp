@@ -254,6 +254,17 @@ bool checkBalanced(bstNode *root){
     int height = 0;
     return checkHeight(root, height);
 }
+
+bool validateBst(bstNode *root, int min, int max){
+    if(root==NULL) return true;
+    if(!(root->value > min) || !(root->value <= max)) return false;
+    if(!validateBst(root->left, min, root->value) || !validateBst(root->right, root->value, max)) return false;
+    return true;
+}
+
+bool validateBst(bstNode *root){
+    return validateBst(root, INT_MIN, INT_MAX);
+}
 //-----------------------------test methods------------------------------
 void testRouteBetweenNodes(){
     Graph g;
@@ -347,7 +358,31 @@ void testBalanced(){
     bool isBalanced2 = checkBalanced(i);
     cout <<"tree balanced: " << isBalanced2 <<endl;
 }
+
+void testValidateBst(){
+    vector<int> sorted;
+    sorted.push_back(1);
+    sorted.push_back(2);
+    sorted.push_back(3);
+    sorted.push_back(4);
+    sorted.push_back(5);
+    sorted.push_back(6);
+    sorted.push_back(7);
+    sorted.push_back(8);
+    sorted.push_back(9);
+    sorted.push_back(10);
+    bstNode *result = minimalTree(sorted);
+    result->print();
+    bool isBst = validateBst(result);
+    cout <<"tree BST: " << isBst <<endl;
+
+    bstNode *i = new bstNode(1);
+    i->addLeft(result);
+    i->print();
+    bool isBst2 = validateBst(i);
+    cout <<"tree BST: " << isBst2 <<endl;
+}
 int main(){
-    testBalanced();
+    testValidateBst();
     return 0;
 }
