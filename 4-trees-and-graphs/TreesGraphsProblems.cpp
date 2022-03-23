@@ -237,6 +237,23 @@ vector<BinaryTreeLinkedList*> listDepths(bstNode *root){
     return results;
 
 }
+
+bool checkHeight(bstNode *root, int &height){
+    if(root == NULL) return true;
+    if(root->left == NULL && root->right == NULL) return true;
+    int leftHeight = root->left != NULL ? height + 1 : height;
+    int rightHeight = root->right != NULL ? height + 1 : height;
+    height++;
+    bool leftIsBalanced = checkHeight(root->left, leftHeight);
+    bool rightIsBalanced = checkHeight(root->right, rightHeight);
+    bool rootIsBalanced = abs(leftHeight - rightHeight)<=1;
+    return rootIsBalanced && leftIsBalanced && rightIsBalanced;
+}
+
+bool checkBalanced(bstNode *root){
+    int height = 0;
+    return checkHeight(root, height);
+}
 //-----------------------------test methods------------------------------
 void testRouteBetweenNodes(){
     Graph g;
@@ -304,8 +321,33 @@ void testListDepths(){
     for(BinaryTreeLinkedList *l : depths){
         l->printLinkedList();
     }
+
+}
+
+void testBalanced(){
+    vector<int> sorted;
+    sorted.push_back(1);
+    sorted.push_back(2);
+    sorted.push_back(3);
+    sorted.push_back(4);
+    sorted.push_back(5);
+    sorted.push_back(6);
+    sorted.push_back(7);
+    sorted.push_back(8);
+    sorted.push_back(9);
+    sorted.push_back(10);
+    bstNode *result = minimalTree(sorted);
+    result->print();
+    bool isBalanced = checkBalanced(result);
+    cout <<"tree balanced: " << isBalanced <<endl;
+
+    bstNode *i = new bstNode(1);
+    i->addLeft(result);
+    i->print();
+    bool isBalanced2 = checkBalanced(i);
+    cout <<"tree balanced: " << isBalanced2 <<endl;
 }
 int main(){
-    testListDepths();
+    testBalanced();
     return 0;
 }
