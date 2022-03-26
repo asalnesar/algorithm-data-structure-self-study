@@ -265,6 +265,46 @@ bool validateBst(bstNode *root, int min, int max){
 bool validateBst(bstNode *root){
     return validateBst(root, INT_MIN, INT_MAX);
 }
+bstNode* commonAncestorHelper(bstNode *root, bstNode *p, bstNode *q, bool &foundAncestor){
+    if(root == NULL){
+        foundAncestor = false;
+        return NULL;
+    }
+    if(root == p && root == q){
+        foundAncestor = true;
+        return root;
+    }
+
+    bstNode* x = commonAncestorHelper(root->left, p,q,foundAncestor);
+    if(foundAncestor){
+        return x;
+    }
+    bstNode* y = commonAncestorHelper(root->right, p,q,foundAncestor);
+    if(foundAncestor){
+        return y;
+    }
+    if(x!=NULL && y!=NULL){
+        foundAncestor = true;
+        return root;
+    }
+    else if(root == p || root == q){
+        foundAncestor = x!=NULL || y!=NULL;
+        return root;
+    }
+    else{
+        foundAncestor = false;
+        return x!= NULL ? x : y;
+    }
+}
+
+bstNode* commonAncestor(bstNode *root, bstNode *p, bstNode *q){
+    bool foundAncestor = false;
+    bstNode *result = commonAncestorHelper(root,p,q, foundAncestor);
+    if(foundAncestor){
+        return result;
+    }
+    return NULL;
+}
 //-----------------------------test methods------------------------------
 void testRouteBetweenNodes(){
     Graph g;
@@ -382,7 +422,35 @@ void testValidateBst(){
     bool isBst2 = validateBst(i);
     cout <<"tree BST: " << isBst2 <<endl;
 }
+
+void testCommonAncestor(){
+    bstNode *root= new bstNode(5);
+    bstNode *left= new bstNode(2);
+    bstNode *right = new bstNode(7);
+    root->addLeft(left);
+    root->addRight(right);
+
+    bstNode *root2= new bstNode(15);
+    bstNode *left2= new bstNode(11);
+    bstNode *right2 = new bstNode(17);
+    bstNode *left22= new bstNode(16);
+    bstNode *right22 = new bstNode(18);
+    right2->addLeft(left22);
+    right2->addRight(right22);
+    root2->addLeft(left2);
+    root2->addRight(right2);
+
+    bstNode *main = new bstNode(10);
+    main->addLeft(root);
+    main->addRight(root2);
+
+    main->print();
+    bstNode  *common = commonAncestor(main, left2, left22);//11 and  16
+    cout <<"Common ancestor: " <<common->value <<endl;
+    
+
+}
 int main(){
-    testValidateBst();
+    testCommonAncestor();
     return 0;
 }
