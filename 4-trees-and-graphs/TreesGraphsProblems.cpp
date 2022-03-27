@@ -3,6 +3,7 @@
 #include <bits/stdc++.h>
 #include <stdlib.h>
 #include <unordered_set>
+#include <unordered_map>
 #include <vector>
 #include <queue>
 
@@ -305,6 +306,46 @@ bstNode* commonAncestor(bstNode *root, bstNode *p, bstNode *q){
     }
     return NULL;
 }
+
+void print_map(std::unordered_map<int, int> &m)
+{
+    for (auto &pair: m) {
+        std::cout << "{" << pair.first << ": " << pair.second << "}\n";
+    }
+}
+void incrementHashTable(unordered_map<int, int> &pathsCount, int key, int delta){
+    int  newCount = pathsCount[key] + delta;
+    if(newCount == 0){
+        pathsCount.erase(key);
+    } else {
+        pathsCount[key] = newCount;
+    }
+}
+int countPathsWithSum(bstNode *root, int targetSum, int runningSum, unordered_map<int, int> &pathsCount){
+    if(root==NULL) return  0;
+    runningSum += root->value;
+    int sum = runningSum - targetSum;
+    int totalPaths = pathsCount[sum];
+
+    if(runningSum==targetSum){
+        totalPaths++;
+    }
+    cout << "Node:" <<root->value<< " /runningSum: " << runningSum << endl;
+    print_map(pathsCount);
+    cout  <<"--------NODE:"<<root->value<<endl;
+    incrementHashTable(pathsCount, runningSum, 1);
+    totalPaths += countPathsWithSum(root->left, targetSum, runningSum, pathsCount);
+    totalPaths += countPathsWithSum(root->right, targetSum, runningSum, pathsCount);
+    incrementHashTable(pathsCount, runningSum, -1);
+    print_map(pathsCount);
+    cout  <<"--------NODE:"<<root->value<<endl;
+    cout<<"TOTAL PATH:"<<totalPaths<<endl;
+    return totalPaths;
+}
+int countPathsWithSum(bstNode *root, int targetSum){
+    unordered_map<int, int> pathsCount;
+    return countPathsWithSum(root, targetSum, 0 , pathsCount);
+}
 //-----------------------------test methods------------------------------
 void testRouteBetweenNodes(){
     Graph g;
@@ -450,7 +491,32 @@ void testCommonAncestor(){
     
 
 }
+
+void testCountPath(){
+    bstNode *root= new bstNode(5);
+    bstNode *left= new bstNode(2);
+    bstNode *right = new bstNode(7);
+    root->addLeft(left);
+    root->addRight(right);
+
+    bstNode *root2= new bstNode(15);
+    bstNode *left2= new bstNode(11);
+    bstNode *right2 = new bstNode(-15);
+    bstNode *left22= new bstNode(5);
+    bstNode *right22 = new bstNode(18);
+    right2->addLeft(left22);
+    right2->addRight(right22);
+    root2->addLeft(left2);
+    root2->addRight(right2);
+
+    bstNode *main = new bstNode(10);
+    main->addLeft(root);
+    main->addRight(root2);
+
+    main->print();
+    cout << "Count path for 15: "<<countPathsWithSum(main, 15)<<endl;
+}
 int main(){
-    testCommonAncestor();
+    testCountPath();
     return 0;
 }
