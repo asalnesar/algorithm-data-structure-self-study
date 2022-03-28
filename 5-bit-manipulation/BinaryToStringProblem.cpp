@@ -4,9 +4,6 @@
 #include <sstream>
 #include <string>
 
-
-
-
 using namespace std;
 
 string binaryToString(double d){
