@@ -6,10 +6,17 @@
 
 using namespace std;
 
-int countSteps(int stairs){
+int countStepsHelper(int stairs, vector<int> memo){
     if(stairs<0) return 0;
     if(stairs==0) return 1;
-    return countSteps(stairs-1) + countSteps(stairs-2) + countSteps(stairs-3);
+    else if(memo[stairs]==0){
+        memo[stairs]=countStepsHelper(stairs-1, memo) + countStepsHelper(stairs-2, memo) + countStepsHelper(stairs-3, memo);
+    }
+    return memo[stairs];
+}
+int countSteps(int stairs){
+    vector<int> memo(stairs);
+    return countStepsHelper(stairs, memo);
 }
 
 int main(){
