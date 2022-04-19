@@ -4,12 +4,6 @@
 
 using namespace std;
 
-void printArray(int a[]){
-    for(int i=0;i<11;i++){
-        cout<<a[i]<<" ";
-    }
-    cout << endl;
-}
 
 void mergeSorted(int a[], int b[], int countA, int countB){
     int indexMerged = countA+countB-1;
@@ -26,7 +20,11 @@ void mergeSorted(int a[], int b[], int countA, int countB){
         }
         indexMerged--;
     }
-    printArray(a);
+    //print a
+    for(int i=0;i<countA+countB;i++){
+        cout<<a[i]<<" ";
+    }
+    cout << endl;
 }
 
 int main(){
